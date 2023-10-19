@@ -1,0 +1,7 @@
+name = "air-lane"
+compatibility_date = "2023-01-01"
+
+[[kv_namespaces]]
+binding = "AIR_LANE_KV"
+id = "ae1d42ac22ec4843a2f4ed224a106609"
+preview_id = "0dda7df6fc104ae4808f705cff7c3007"
