@@ -1,0 +1,18 @@
+.my-node {
+  fill: #fff;
+}
+.my-node:hover {
+  fill: #eee;
+}
+
+.my-node .label {
+  fill: #000;
+  font-weight: bold;
+  text-align: left;
+  z-index: 100;
+}
+
+.my-node-root {
+  opacity: 1.0 !important;
+  fill: red !important;
+}

@@ -1,4 +1,12 @@
-import type { LinksFunction } from "@remix-run/cloudflare";
+import "~/tailwind.css";
+
+import {
+  json,
+  type HeadersFunction,
+  type LinksFunction,
+  type LoaderFunction,
+  AppLoadContext,
+} from "@remix-run/cloudflare";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import {
   Links,
@@ -7,13 +15,39 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
+export const headers: HeadersFunction = () => ({
+  "WWW-Authenticate": "Basic",
+});
+
+const isAuthorized = (context: AppLoadContext, request: Request) => {
+  const header = request.headers.get("Authorization");
+
+  if (!header) return false;
+
+  const base64 = header.replace("Basic ", "");
+  const [username, password] = atob(base64).toString().split(":");
+
+  return username === context.env.USERNAME && password === context.env.PASSWORD;
+};
+
+export const loader: LoaderFunction = async ({ context, request }) => {
+  if (!isAuthorized(context, request)) {
+    return json(false, { status: 401 });
+  }
+
+  return json(true);
+};
+
 export default function App() {
+  const authorized = useLoaderData();
+
   return (
     <html lang="en">
       <head>
@@ -22,11 +56,18 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+      <body className="bg-gray-100">
+        {authorized ? (
+          <div>
+            <div className="container mx-auto my-8">
+              <Outlet />
+            </div>
+            ,
+            <ScrollRestoration />,
+            <Scripts />,
+            <LiveReload />,
+          </div>
+        ) : null}
       </body>
     </html>
   );

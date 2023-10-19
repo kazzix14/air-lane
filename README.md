@@ -1,3 +1,12 @@
+use prisma to migrate on local.
+use wrangler to migrate on production.
+```sh
+bun prisma reset
+bun prisma migrate
+bunx zx scripts/migration_apply.mjs
+```
+
+
 # Welcome to Remix!
 
 - [Remix Docs](https://remix.run/docs)

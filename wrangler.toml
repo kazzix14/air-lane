@@ -5,3 +5,10 @@ compatibility_date = "2023-01-01"
 binding = "AIR_LANE_KV"
 id = "ae1d42ac22ec4843a2f4ed224a106609"
 preview_id = "0dda7df6fc104ae4808f705cff7c3007"
+
+[[d1_databases]]
+binding = "AIR_LANE_DB" # i.e. available in your Worker on env.DB
+database_name = "air-lane"
+database_id = "3dd3f320-a2fd-41eb-b4aa-58e567a1d56d"
+migrations_dir = ".wrangler/migrations"
+preview_database_id = "DB"
