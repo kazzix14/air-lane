@@ -3,6 +3,8 @@ use wrangler to migrate on production.
 ```sh
 bun prisma reset
 bun prisma migrate
+
+# remove PRAGMA lines before migration
 bunx zx scripts/migration_apply.mjs
 ```
 

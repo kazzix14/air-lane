@@ -1,7 +1,5 @@
-import { json } from "@remix-run/cloudflare";
-import type { LoaderFunction, MetaFunction } from "@remix-run/cloudflare";
+import type { MetaFunction } from "@remix-run/cloudflare";
 import { Link } from "@remix-run/react";
-import type { Env } from "types/env";
 import { z } from "zod";
 
 export const zEdge = z.object({
@@ -18,15 +16,6 @@ export const meta: MetaFunction = () => {
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
   ];
-};
-
-export const loader: LoaderFunction = async ({ context }) => {
-  const env = context.env as Env;
-  const key =
-    "/rails_app/app/services/app_payments/charges/create_service.rb#open";
-  const edges = (await env.AIR_LANE_KV.get(key, "json")) as Array<Edge>;
-
-  return json({ edges });
 };
 
 export default function Index() {
