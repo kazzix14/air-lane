@@ -6,6 +6,8 @@ bun prisma migrate
 
 # remove PRAGMA lines before migration
 bunx zx scripts/migration_apply.mjs
+
+bun run pages:deploy
 ```
 
 

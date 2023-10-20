@@ -216,7 +216,7 @@ export default function ShowNode() {
     <div>
       <Link
         to="/nodes"
-        className="h-fit rounded py-1 px-2 bg-slate-500 text-white hover:cursor-pointer hover:opacity-50">
+        className="h-fit rounded py-1 px-2 fixed left-10 top-10 shadow-lg bg-slate-500 text-white hover:cursor-pointer hover:opacity-50">
         Back to Nodes
       </Link>
 

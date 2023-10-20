@@ -62,10 +62,9 @@ export default function App() {
             <div className="container mx-auto my-8">
               <Outlet />
             </div>
-            ,
-            <ScrollRestoration />,
-            <Scripts />,
-            <LiveReload />,
+            <ScrollRestoration />
+            <Scripts />
+            <LiveReload />
           </div>
         ) : null}
       </body>
