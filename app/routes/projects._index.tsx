@@ -41,38 +41,6 @@ export default function NewProject() {
                 replace: !isFirstSearch,
               });
             }}>
-            <div className="flex gap-4">
-              <div className="flex gap-1">
-                <input
-                  type="checkbox"
-                  id="onlyEntrypoint"
-                  name="onlyEntrypoint"
-                  value="true"
-                  className="peer cursor-pointer mt-[0.1rem]"
-                />
-                <label
-                  htmlFor="onlyEntrypoint"
-                  className="cursor-pointer peer-hover:opacity-50">
-                  Only Entrypoint
-                </label>
-              </div>
-
-              <div className="flex gap-1">
-                <input
-                  type="checkbox"
-                  id="onlyTargeted"
-                  name="onlyTargeted"
-                  value="true"
-                  className="peer cursor-pointer mt-[0.1rem]"
-                />
-                <label
-                  htmlFor="onlyTargeted"
-                  className="cursor-pointer peer-hover:opacity-50">
-                  Only Targeted
-                </label>
-              </div>
-            </div>
-
             <div className="flex gap-2">
               <label htmlFor="name" className="cursor-pointer">
                 Name Search
