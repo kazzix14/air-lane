@@ -6,6 +6,7 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export type Edge = {
     id: Generated<number>;
+    projectId: number;
     sourceNodeId: number;
     targetNodeId: number;
 };

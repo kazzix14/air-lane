@@ -1,5 +1,8 @@
-import { json } from "@remix-run/cloudflare";
-import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
+import { json, redirect } from "@remix-run/cloudflare";
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+} from "@remix-run/cloudflare";
 import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
 import { client } from "~/database/client.server";
 import { z } from "zod";
@@ -17,6 +20,25 @@ const parseBooleanSearchParam = async (searchParam: string | null) => {
   } else {
     return false;
   }
+};
+
+export const action = async ({
+  request,
+  context,
+  params,
+}: ActionFunctionArgs) => {
+  const projectId = z.coerce.number().int().positive().parse(params.projectId);
+
+  if (request.method === "DELETE") {
+    const db = client(context.env.AIR_LANE_DB);
+
+    await db.deleteFrom("Edge").where("projectId", "=", projectId).execute();
+    await db.deleteFrom("Node").where("projectId", "=", projectId).execute();
+  }
+
+  redirect(`/projects/${projectId}/nodes`);
+
+  return null;
 };
 
 export const loader = async ({
@@ -141,7 +163,7 @@ export default function () {
             </Link>
           </div>
 
-          <Form action={`projects/${projectId}/nodes/`} method="DELETE">
+          <Form action={`/projects/${projectId}/nodes`} method="DELETE">
             <button
               type="submit"
               className="h-fit rounded py-1 px-2 bg-red-500 text-white hover:cursor-pointer hover:opacity-50">

@@ -1,6 +1,6 @@
 import { json } from "@remix-run/cloudflare";
 import type { LoaderFunction } from "@remix-run/cloudflare";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { client } from "~/database/client.server";
 import type { Edge, Node } from "~/database/types";
 import { z } from "zod";
@@ -212,13 +212,14 @@ export default function ShowNode() {
     }
   }, [ref, node, relatedNodes, ancestorEdges, descendantEdges]);
 
+  const navigate = useNavigate();
   return (
     <div>
-      <Link
-        to="/nodes"
+      <button
+        onClick={() => navigate(-1)}
         className="h-fit rounded py-1 px-2 fixed left-10 top-10 shadow-lg bg-slate-500 text-white hover:cursor-pointer hover:opacity-50">
-        Back to Nodes
-      </Link>
+        Back
+      </button>
 
       <svg ref={ref} className="h-fit w-[6000px] overflow-visible"></svg>
     </div>

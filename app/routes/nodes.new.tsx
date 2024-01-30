@@ -74,6 +74,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     .insertInto("Edge")
     .values(
       inputs.map((input) => ({
+        projectId,
         sourceNodeId: nodes.find((node) => node.name === input.caller)!.id,
         targetNodeId: nodes.find((node) => node.name === input.callee)!.id,
       }))

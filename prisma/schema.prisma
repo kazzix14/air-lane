@@ -28,6 +28,9 @@ model Node {
 model Edge {
   id Int @id @default(dbgenerated())
 
+  project   Project @relation("project", fields: [projectId], references: [id])
+  projectId Int
+
   sourceNode   Node @relation("sourcedEdges", fields: [sourceNodeId], references: [id])
   sourceNodeId Int
 
@@ -42,4 +45,5 @@ model Project {
   name String @unique
 
   nodes Node[] @relation("project")
+  edges Edge[] @relation("project")
 }
