@@ -3,7 +3,7 @@
 
 generator kysely {
   provider = "prisma-kysely"
-  output = "../app/database"
+  output   = "../app/database"
   fileName = "types.ts"
 }
 
@@ -13,28 +13,33 @@ datasource db {
 }
 
 model Node {
-  id Int @id @default(dbgenerated())
-  name String @unique
+  id       Int     @id @default(dbgenerated())
+  name     String  @unique
   filename String?
-  line Int?
+  line     Int?
 
-  sourcedEdges Edge[] @relation("sourcedEdges")
+  project   Project @relation("project", fields: [projectId], references: [id])
+  projectId Int
+
+  sourcedEdges  Edge[] @relation("sourcedEdges")
   targetedEdges Edge[] @relation("targetedEdges")
 }
 
 model Edge {
   id Int @id @default(dbgenerated())
 
-  sourceNode Node @relation("sourcedEdges", fields: [sourceNodeId], references: [id])
+  sourceNode   Node @relation("sourcedEdges", fields: [sourceNodeId], references: [id])
   sourceNodeId Int
 
-  targetNode Node @relation("targetedEdges", fields: [targetNodeId], references: [id])
+  targetNode   Node @relation("targetedEdges", fields: [targetNodeId], references: [id])
   targetNodeId Int
 
   @@unique([sourceNodeId, targetNodeId])
 }
 
 model Project {
-  id Int @id @default(dbgenerated())
+  id   Int    @id @default(dbgenerated())
   name String @unique
+
+  nodes Node[] @relation("project")
 }

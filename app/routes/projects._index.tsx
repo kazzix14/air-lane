@@ -18,57 +18,59 @@ export const loader = async ({ context, request }: LoaderFunctionArgs) => {
 
   const projects = await query.execute();
 
-  return json({ query, projects });
+  return json({ name, projects });
 };
 
 export default function NewProject() {
-  const { query, projects } = useLoaderData<typeof loader>();
+  const { name, projects } = useLoaderData<typeof loader>();
   const submit = useSubmit();
 
   return (
     <div>
-      <div className="rounded shadow p-8 bg-white">
-        <div className="flex justify-between">
-          <Form
-            action="/projects"
-            method="GET"
-            role="search"
-            className="flex flex-col gap-2 mb-4"
-            onChange={(e) => {
-              const isFirstSearch = query === null;
+      <div className="flex justify-between">
+        <Form
+          action="/projects"
+          method="GET"
+          role="search"
+          className="flex flex-col gap-2 mb-4"
+          onChange={(e) => {
+            const isFirstSearch = name === null;
 
-              submit(e.currentTarget, {
-                replace: !isFirstSearch,
-              });
-            }}>
-            <div className="flex gap-2">
-              <label htmlFor="name" className="cursor-pointer">
-                Name Search
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                className="rounded border w-96 px-1"
-              />
-            </div>
-          </Form>
-
-          <div className="flex">
-            <Link
-              to="/projects/new"
-              className="h-fit rounded py-1 px-2 bg-green-500 text-white hover:cursor-pointer hover:opacity-50">
-              Add Project
-            </Link>
+            submit(e.currentTarget, {
+              replace: !isFirstSearch,
+            });
+          }}>
+          <div className="flex gap-2">
+            <label htmlFor="name" className="cursor-pointer">
+              Name Search
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              className="rounded border w-96 px-1"
+              defaultValue={name ?? ""}
+            />
           </div>
-        </div>
+        </Form>
 
-        <Table
-          children={projects.map((project) => {
-            return { link: `/projects/${project.id}`, content: project.name };
-          })}
-        />
+        <div className="flex">
+          <Link
+            to="/projects/new"
+            className="h-fit rounded py-1 px-2 bg-green-500 text-white hover:cursor-pointer hover:opacity-50">
+            Add Project
+          </Link>
+        </div>
       </div>
+
+      <Table
+        children={projects.map((project) => {
+          return {
+            link: `/projects/${project.id}/nodes`,
+            content: project.name,
+          };
+        })}
+      />
     </div>
   );
 }

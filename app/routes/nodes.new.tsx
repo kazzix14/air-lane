@@ -31,9 +31,10 @@ export const loader = async ({ context }: ActionFunctionArgs) => {
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const db = client(context.env.AIR_LANE_DB);
 
-  const rawInput = (await request.formData()).get("input-json");
+  const rawInput = (await request.clone().formData()).get("inputJson");
+  const rawProjectId = (await request.clone().formData()).get("projectId");
 
-  if (rawInput === null) {
+  if (rawInput === null || rawProjectId === null) {
     throw new Error("input is null");
   }
 
@@ -50,6 +51,8 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     })
     ._unsafeUnwrap();
 
+  const projectId = z.coerce.number().int().positive().parse(rawProjectId);
+
   const uniqueNodeNames = uniquifyArray(
     inputs.flatMap((input) => [input.callee, input.caller])
   );
@@ -57,7 +60,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   await db
     .insertInto("Node")
     // とりあえずnameをidとする
-    .values(uniqueNodeNames.map((nodeName) => ({ name: nodeName })))
+    .values(uniqueNodeNames.map((nodeName) => ({ name: nodeName, projectId })))
     .onConflict((oc) => oc.column("name").doNothing())
     .execute();
 
@@ -78,7 +81,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     .onConflict((oc) => oc.doNothing())
     .execute();
 
-  return redirect(`/nodes`);
+  return redirect(`/projects/${projectId}/nodes`);
 };
 
 export default function NewNode() {
@@ -86,9 +89,9 @@ export default function NewNode() {
 
   return (
     <div>
-      <Link to="/nodes"> Nodes </Link>
+      <Link to="/"> Back </Link>
       <Form action="/nodes/new" method="post">
-        <select name="project_id">
+        <select name="projectId">
           {projects.map((project, index) => {
             return (
               <option key={index} value={String(project.id)}>
@@ -97,7 +100,7 @@ export default function NewNode() {
             );
           })}
         </select>
-        <textarea name="input-json"></textarea>
+        <textarea name="inputJson"></textarea>
         <button type="submit"> Submit </button>
       </Form>
     </div>

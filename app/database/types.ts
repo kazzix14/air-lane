@@ -14,6 +14,7 @@ export type Node = {
     name: string;
     filename: string | null;
     line: number | null;
+    projectId: number;
 };
 export type Project = {
     id: Generated<number>;

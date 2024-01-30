@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/cloudflare";
+import { Outlet } from "@remix-run/react";
 import { z } from "zod";
 import { Table } from "~/components/table";
 
@@ -22,12 +23,14 @@ export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <h1>Welcome to Remix</h1>
-      <Table children={[
-        { link: "/nodes", content: "Nodes" },
-        { link: "/nodes/new", content: "New Nodes" },
-        { link: "/projects", content: "Projects" },
-        { link: "/projects/new", content: "New Projects" },
-      ]}/>
+      <Table
+        children={[
+          { link: "/nodes/new", content: "New Nodes" },
+          { link: "/projects", content: "Projects" },
+          { link: "/projects/new", content: "New Projects" },
+        ]}
+      />
+      <Outlet />
     </div>
   );
 }

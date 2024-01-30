@@ -5,7 +5,7 @@ import {
   type HeadersFunction,
   type LinksFunction,
   type LoaderFunction,
-  AppLoadContext,
+  type AppLoadContext,
 } from "@remix-run/cloudflare";
 import { cssBundleHref } from "@remix-run/css-bundle";
 import {
@@ -17,6 +17,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import { Card } from "./components/card";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -60,7 +61,9 @@ export default function App() {
         {authorized ? (
           <div>
             <div className="container mx-auto my-8">
-              <Outlet />
+              <Card>
+                <Outlet />
+              </Card>
             </div>
             <ScrollRestoration />
             <Scripts />
