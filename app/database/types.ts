@@ -15,7 +15,12 @@ export type Node = {
     filename: string | null;
     line: number | null;
 };
+export type Project = {
+    id: Generated<number>;
+    name: string;
+};
 export type DB = {
     Edge: Edge;
     Node: Node;
+    Project: Project;
 };

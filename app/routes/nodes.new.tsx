@@ -1,9 +1,10 @@
 import type { ActionFunctionArgs } from "@remix-run/cloudflare";
-import { redirect } from "@remix-run/cloudflare";
-import { Form, Link } from "@remix-run/react";
+import { redirect, json } from "@remix-run/cloudflare";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import { err, ok } from "neverthrow";
 import { client } from "~/database/client.server";
 import { safeParseJson, uniquifyArray } from "~/util.server";
+import { Project } from "~/database/types";
 import { z } from "zod";
 
 export const zNewNodeInput = z.array(
@@ -12,6 +13,20 @@ export const zNewNodeInput = z.array(
     callee: z.string(),
   })
 );
+
+type LoaderData = {
+  projects: Array<Project>;
+};
+export const loader = async ({ context }: ActionFunctionArgs) => {
+  const db = client(context.env.AIR_LANE_DB);
+
+  const projects = await db
+    .selectFrom("Project")
+    .select(["Project.id", "Project.name"])
+    .execute();
+
+  return json({ projects });
+};
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const db = client(context.env.AIR_LANE_DB);
@@ -67,10 +82,21 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
 };
 
 export default function NewNode() {
+  const { projects } = useLoaderData<LoaderData>();
+
   return (
     <div>
       <Link to="/nodes"> Nodes </Link>
       <Form action="/nodes/new" method="post">
+        <select name="project_id">
+          {projects.map((project, index) => {
+            return (
+              <option key={index} value={String(project.id)}>
+                {project.name}
+              </option>
+            );
+          })}
+        </select>
         <textarea name="input-json"></textarea>
         <button type="submit"> Submit </button>
       </Form>

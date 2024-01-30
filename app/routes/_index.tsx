@@ -23,6 +23,8 @@ export default function Index() {
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
       <Link to="/nodes"> Nodes </Link>
       <Link to="/nodes/new"> New Nodes </Link>
+      <Link to="/projects"> Projects </Link>
+      <Link to="/projects/new"> New Projects </Link>
       <h1>Welcome to Remix</h1>
     </div>
   );
