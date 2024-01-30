@@ -16,7 +16,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     .values({ name: rawInput.toString() })
     .execute();
 
-  return redirect("/");
+  return redirect("/projects");
 };
 
 export default function NewProject() {

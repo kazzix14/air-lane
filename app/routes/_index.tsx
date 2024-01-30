@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/cloudflare";
-import { Link } from "@remix-run/react";
 import { z } from "zod";
+import { Table } from "~/components/table";
 
 export const zEdge = z.object({
   caller: z.string(),
@@ -21,11 +21,13 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <Link to="/nodes"> Nodes </Link>
-      <Link to="/nodes/new"> New Nodes </Link>
-      <Link to="/projects"> Projects </Link>
-      <Link to="/projects/new"> New Projects </Link>
       <h1>Welcome to Remix</h1>
+      <Table children={[
+        { link: "/nodes", content: "Nodes" },
+        { link: "/nodes/new", content: "New Nodes" },
+        { link: "/projects", content: "Projects" },
+        { link: "/projects/new", content: "New Projects" },
+      ]}/>
     </div>
   );
 }

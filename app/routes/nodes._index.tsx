@@ -1,9 +1,9 @@
 import { json } from "@remix-run/cloudflare";
-import type { LoaderFunction } from "@remix-run/cloudflare";
+import type { LoaderFunctionArgs } from "@remix-run/cloudflare";
 import { Form, Link, useLoaderData, useSubmit } from "@remix-run/react";
 import { client } from "~/database/client.server";
-import type { Node } from "~/database/types";
 import { z } from "zod";
+import { Table } from "~/components/table";
 
 export const zNodesInput = z.object({
   onlyEntrypoint: z.boolean().nullable(),
@@ -19,11 +19,7 @@ const parseBooleanSearchParam = async (searchParam: string | null) => {
   }
 };
 
-type LoaderData = {
-  nodes: Array<Node>;
-};
-
-export const loader: LoaderFunction = async ({ context, request }) => {
+export const loader = async ({ context, request }: LoaderFunctionArgs) => {
   const db = client(context.env.AIR_LANE_DB);
 
   const searchParams = new URL(request.url).searchParams;
@@ -59,11 +55,11 @@ export const loader: LoaderFunction = async ({ context, request }) => {
 
   const nodes = await query.execute();
 
-  return json({ nodes });
+  return json({ query, nodes });
 };
 
 export default function () {
-  const { nodes } = useLoaderData<LoaderData>();
+  const { query, nodes } = useLoaderData<typeof loader>();
   const submit = useSubmit();
 
   return (
@@ -75,7 +71,13 @@ export default function () {
             method="GET"
             role="search"
             className="flex flex-col gap-2 mb-4"
-            onChange={(e) => submit(e.currentTarget)}>
+            onChange={(e) => {
+              const isFirstSearch = query === null;
+
+              submit(e.currentTarget, {
+                replace: !isFirstSearch,
+              });
+            }}>
             <div className="flex gap-4">
               <div className="flex gap-1">
                 <input
@@ -130,15 +132,11 @@ export default function () {
           </div>
         </div>
 
-        <ul className="divide-y divide-solid">
-          {nodes?.map((node, index) => (
-            <li key={index} className="p-1">
-              <Link to={`/nodes/${node.id}`} className="hover:opacity-50">
-                {node.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <Table
+          children={nodes.map((node) => {
+            return { link: `/nodes/${node.id}`, content: node.name };
+          })}
+        />
       </div>
     </div>
   );
