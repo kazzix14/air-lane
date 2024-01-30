@@ -64,7 +64,7 @@ export const loader = async ({
   let query = db
     .selectFrom("Node")
     .where("Node.projectId", "=", projectId)
-    .select(["Node.id", "Node.name", "Node.filename", "Node.line"]);
+    .selectAll();
 
   if (onlyEntrypoint === true) {
     query = query
